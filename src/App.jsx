@@ -22,16 +22,16 @@ function App() {
     setIsAddCustomerOpen(true);
   }
 
-  async function handleDeleteCustomer() {
-    await deleteCustomer(customerId);
-    await refreshCustomerList();
-  }
-
   async function refreshCustomerList() {
       const updatedList = await getCustomerList();
       setOptionList(updatedList.map(customer => (
         <option key={customer.ID} value={customer.ID}>{customer.Name}</option>
       )));
+  }
+
+  async function handleDeleteCustomer() {
+    await deleteCustomer(customerId);
+    await refreshCustomerList();
   }
 
   const handleSubmitNewCustomer = async (name) => {
@@ -83,6 +83,7 @@ function App() {
           )));
         } else {
           setProductList(null);
+          setSelectedProduct(null);
         }
       } catch (err) {
         console.error("could not get customer list", err);
