@@ -39,12 +39,14 @@ html, body, #root {
 }
 
 #product-table td {
-  text-align: center;              /* Horizontally center text */
-  width: 100%;                     /* Make td fill the full table width */
-  padding: 12px 12px; 
-  background-color: #f8f9fa;     /* Optional: subtle background */
-  border-radius: 8px;              /* Optional: rounded cells */
+  text-align: center;
+  width: 100%;
+  padding: 8px 12px;                    /* ← reduced from 12px 12px */
+  background-color: #f8f9fa;
+  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  vertical-align: middle;               /* ← centers text vertically */
+  line-height: 1.4;
 }
 
 #product-info {
@@ -54,10 +56,11 @@ html, body, #root {
 
 #product-table tr {
   cursor: 'pointer';
+  height: 52px;
 }
 
 #product-table td:hover {
-  background-color: lightblue !important;
+  background-color: lightblue;
   cursor: pointer;                         
   transition: background-color 0.2s ease;
 }

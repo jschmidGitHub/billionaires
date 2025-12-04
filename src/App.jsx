@@ -127,7 +127,10 @@ function App() {
         </table>
 
         <div id="product-info">
+          
+          {selectedProduct && (
           <h2>Product Detail:</h2>
+          )}
           <p>{selectedProduct ? `${selectedProduct.Name}:` : ""}</p>
           
           {selectedProduct && (
