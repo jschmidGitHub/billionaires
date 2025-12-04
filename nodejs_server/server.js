@@ -50,7 +50,7 @@ app.get('/api/product-detail', async (req, res) => {
     }
 
     try {
-      const productDetail = db.prepare(`SELECT ID, CustomerID, Name, Description, Price FROM Products WHERE CustomerID = ${customerId}`).all();
+      const productDetail = db.prepare(`SELECT ID, CustomerID, Name, ImageLink, Description, Price FROM Products WHERE CustomerID = ${customerId}`).all();
       
       //console.log("Product Detail: ", productDetail);
 

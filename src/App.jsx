@@ -4,6 +4,7 @@ import getCustomerList from './getCustomerList.js';
 import getProductDetail from './getProductDetail.js';
 import postNewCustomer from './postNewCustomer.js';
 import deleteCustomer from './deleteCustomer.js';
+import noPic from './assets/noPic.png';
 import './App.css'
 
 function App() {
@@ -12,7 +13,6 @@ function App() {
   const [productList, setProductList] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
-  //const [newCustomerName, setNewCustomerName] = useState("");
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -128,8 +128,18 @@ function App() {
         <div id="product-info">
           <h2>Product Detail:</h2>
           <p>{selectedProduct ? `${selectedProduct.Name}:` : ""}</p>
+          
+          {selectedProduct && (
+          <img id="product-image"
+          src={selectedProduct.ImageLink}
+          onError={(e) => {
+                e.target.src = noPic; // fallback image
+                e.target.onerror = null; // prevent infinite loop if noPic.png is also missing
+              }}/>
+            )}
           <p>{selectedProduct ? selectedProduct.Description : ""}</p>
           <p>{selectedProduct ? `$${selectedProduct.Price}` : ""}</p>
+            
         </div>
 
         <div id="button-panel">
