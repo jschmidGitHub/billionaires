@@ -1,0 +1,96 @@
+html, body, #root {
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 10px 10px;
+  background-color: #dddddd;
+  color:rgb(0, 0, 0);
+}
+
+#app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#app-header {
+  text-align: center;
+  margin: 0 auto;
+}
+
+#app-content {
+  display: flex;
+  flex-direction: row;
+}
+
+#customers-drop {
+  margin: 10px 10px;
+  height: 30px;
+  border-radius: 5px;
+  background-color: #b8b8b8;
+}
+
+#product-table {
+  width: 175px;
+  margin: 30px 50px;
+  border-collapse: separate;       /* Allows spacing between rows */
+  border-spacing: 0 8px;          /* vertical spacing between rows */
+}
+
+#product-table td {
+  text-align: center;              /* Horizontally center text */
+  width: 100%;                     /* Make td fill the full table width */
+  padding: 12px 12px; 
+  background-color: #f8f9fa;     /* Optional: subtle background */
+  border-radius: 8px;              /* Optional: rounded cells */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#product-info {
+  width: 300px;
+  height: 400px;
+}
+
+#product-table tr {
+  cursor: 'pointer';
+}
+
+#product-table td:hover {
+  background-color: lightblue !important;
+  cursor: pointer;                         
+  transition: background-color 0.2s ease;
+}
+
+#product-info {
+  margin: 40px 150px;
+}
+
+#product-info p {
+  max-width: 350px;
+}
+
+#button-panel {
+  display: flex;
+  flex-direction: row;        /* you already have this */
+  gap: 20px;                  /* nice spacing between buttons */
+  justify-content: center;    /* or flex-start, space-between, etc. */
+  flex-wrap: wrap;            /* optional: wrap on small screens */
+  padding: 20px;
+  margin: 20px 0;
+  width: 200px;
+  height: 250px;
+}
+
+#button-panel button {
+  width: 150px;
+  padding: 5px 5px;
+  font-size: 1rem;
+  text-align: center;
+  border: none;
+  background-color: #b8b8b8;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
