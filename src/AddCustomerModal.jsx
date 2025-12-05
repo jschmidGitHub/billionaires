@@ -55,7 +55,7 @@ const AddCustomerModal = ({ isOpen, onClose, onSubmit }) => {
               Cancel
             </button>
             <button type="submit"
-              style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#28a745', color: 'white' }}>
+              style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ccc' }}>
               Add Customer
             </button>
           </div>

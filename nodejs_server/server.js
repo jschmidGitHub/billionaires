@@ -60,7 +60,7 @@ app.get('/api/product-detail', async (req, res) => {
     }
 });
 
-app.post('/api/new-customer/', async (req, res) => {
+app.post('/api/new-customer', async (req, res) => {
 
   //console.log("Got a POST: /api/new-customer");
   const { customerName } = req.body;
@@ -78,15 +78,12 @@ app.post('/api/new-customer/', async (req, res) => {
 
     const name = customerName.trim();
 
-    console.log("Db object: ", db);
-
   try {
-    // Step 1: Get max ID — correct better-sqlite3 syntax
     const row = db.prepare('SELECT MAX(ID) AS maxId FROM Customers').get();
     const maxId = row?.maxId ?? 0;
     const newId = maxId + 1;
 
-    // Step 2: Insert new customer — correct syntax
+    // Insert new customer
     db.prepare('INSERT INTO Customers (ID, Name) VALUES (?, ?)').run(newId, name);
 
     console.log(`Added customer: ID=${newId}, Name="${name}"`);
@@ -105,10 +102,10 @@ app.post('/api/new-customer/', async (req, res) => {
   }
 });
 
-app.delete('/api/delete-customer/', async (req, res) => {
+app.delete('/api/delete-customer', async (req, res) => {
   
   console.log("Got a DELETE: /api/delete-customer");
-  const customerId = req.query.customerId;   // e.g., /api/delete-customer/?customerId=5
+  const customerId = req.query.customerId;
 
   if (!customerId || isNaN(customerId)) {
     return res.status(400).json({ error: 'Valid customer ID is required' });
@@ -148,6 +145,99 @@ app.delete('/api/delete-customer/', async (req, res) => {
       });
     }
 
+    res.status(500).json({ error: 'Failed to delete customer' });
+  }
+});
+
+app.post('/api/new-product', async (req, res) => {
+
+  console.log("Got a POST: /api/new-product");
+
+  const { customerId, productName, description, price, imageLink } = req.body;
+
+    // Basic validation
+    if (!customerId) {
+        console.error('Missing required field: customerId');
+        return res
+            .status(400)
+            .json({ error: 'Missing required field: customerId' });
+    }
+    if (!productName) {
+        console.error('Missing required field: productName');
+        return res
+            .status(400)
+            .json({ error: 'Missing required field: productName' });
+    }
+    if (!description) {
+        console.error('Missing required field: description');
+        return res
+            .status(400)
+            .json({ error: 'Missing required field: description' });
+    }
+
+
+  try {
+    const row = db.prepare('SELECT MAX(ID) AS maxId FROM Products').get();
+    const maxId = row?.maxId ?? 0;
+    const newId = maxId + 1;
+
+    console.log("newID:", newId);
+
+    // Insert new product
+    db.prepare('INSERT INTO Products (ID, CustomerID, Name, Description, Price, ImageLink) VALUES (?, ?, ?, ?, ?, ?)').run(newId, customerId, productName, description, price, imageLink);
+
+    console.log(`Added product with ID=${newId}, Name="${productName}"`);
+
+    res.status(201).json({
+      success: true,
+      customer: { ID: newId, Name: productName }
+    });
+  } catch (err) {
+    console.error('Database error while adding product:', err);
+    res.status(500).json({ error: 'Failed to add customer' });
+  }
+});
+
+app.delete('/api/delete-product', async (req, res) => {
+  
+  console.log("Got a DELETE: /api/delete-product");
+  const productId = req.params.productId;
+
+  console.log("Received productId: ", productId, isNaN(productId));
+
+  if (!productId || isNaN(productId)) {
+    return res.status(400).json({ error: 'Valid product ID is required' });
+  }
+
+  const id = parseInt(productId, 10);
+
+  try {
+    // Check if customer exists first
+    const customer = db.prepare('SELECT ID FROM Products WHERE ID = ?').get(id);
+    if (!customer) {
+      console.error('Customer not found at id:', id);
+      return res.status(404).json({ error: 'Customer not found' });
+    } else {
+      console.log('Customer found at id:', id);
+    }
+  /*
+    // Delete the customer
+    const result = db.prepare('DELETE FROM Customers WHERE ID = ?').run(id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    console.log(`Deleted customer: ID=${id}, Name="${customer.Name}"`);
+*/
+    res.status(200).json({
+      success: true,
+      message: 'Customer deleted',
+      deletedId: id
+    });
+
+  } catch (err) {
+    console.error('Delete error:', err);
     res.status(500).json({ error: 'Failed to delete customer' });
   }
 });
