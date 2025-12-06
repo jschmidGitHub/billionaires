@@ -57,7 +57,7 @@ function App() {
   }
 
   function handleModifyProduct() {
-    console.log("Modify Product");
+    setIsModifyProductOpen(true);
   }
 
   async function refreshCustomerList() {
@@ -120,6 +120,10 @@ function App() {
 
   async function handleSubmitNewProduct(newProduct) {
     postNewProduct(newProduct);
+  }
+
+  async function handleSubmitModifiedProduct(modifiedProduct) {
+    console.log("submit modified product")
   }
 
   // Populate the customersDrop select element at startup
@@ -228,11 +232,21 @@ function App() {
         <ProductModal
           isOpen={isAddProductOpen}
           onClose={() => {
-            setIsAddProductOpen(false)
+            setIsAddProductOpen(false);
             fetchProductDetail();
           }}
           customerId={customerId}
           onSubmit={handleSubmitNewProduct}
+        />
+
+        <ProductModal
+          isOpen={isModifyProductOpen}
+          onClose={() => {
+            setIsModifyProductOpen(false);
+            fetchProductDetail();
+          }}
+          customerId={customerId}
+          onSubmit={handleSubmitModifiedProduct}
         />
 
       </div>
