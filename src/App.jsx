@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import AddCustomerModal from './AddCustomerModal.jsx';
-import AddProductModal from './AddProductModal.jsx';
+import CustomerModal from './CustomerModal.jsx';
+import ProductModal from './ProductModal.jsx';
 import getCustomerList from './getCustomerList.js';
 import getProductDetail from './getProductDetail.js';
 import postNewCustomer from './postNewCustomer.js';
 import deleteCustomer from './deleteCustomer.js';
+import putCustomer from './putCustomer.js';
 import postNewProduct from './postNewProduct.js';
 import deleteProduct from './deleteProduct.jsx';
 import noPic from './assets/noPic.png';
@@ -17,9 +18,19 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [isRenameCustomerOpen, setIsRenameCustomerOpen] = useState(false);
+  const [isModifyProductOpen, setIsModifyProductOpen] = useState(false);
 
   function handleAddCustomer() {
     setIsAddCustomerOpen(true);
+  }
+
+  function handleRenameCustomer() {
+    if (!customerId) {
+      alert("You must select a customer from the drop-down before using the Rename Customer button.");
+    } else {
+      setIsRenameCustomerOpen(true);
+    }
   }
 
   function handleAddProduct() {
@@ -35,14 +46,18 @@ function App() {
 
     if (!customerId) {
       alert("You must select a customer from the drop-down before deleting a product.");
-    } else if(!selectedProduct) {
+    } else if (!selectedProduct) {
       alert("You must click on a product from the product-buttons before deleting a product.");
     }
-      else {
+    else {
       await deleteProduct(selectedProduct.ID);
       setSelectedProduct(null);
       await fetchProductDetail();
     }
+  }
+
+  function handleModifyProduct() {
+    console.log("Modify Product");
   }
 
   async function refreshCustomerList() {
@@ -53,23 +68,23 @@ function App() {
   }
 
   async function fetchProductDetail() {
-      try {
-        const productDetail = await getProductDetail(customerId);
+    try {
+      const productDetail = await getProductDetail(customerId);
 
-        if (productDetail?.length > 0) {
-          setProductList(productDetail.map(product => (
-            <tr key={product.ID} onClick={() => setSelectedProduct(product)}>
-              <td>{product.Name}</td>
-            </tr>
-          )));
-        } else {
-          setProductList(null);
-          setSelectedProduct(null);
-        }
-      } catch (err) {
-        console.error("could not get product list", err);
+      if (productDetail?.length > 0) {
+        setProductList(productDetail.map(product => (
+          <tr key={product.ID} onClick={() => setSelectedProduct(product)}>
+            <td>{product.Name}</td>
+          </tr>
+        )));
+      } else {
+        setProductList(null);
+        setSelectedProduct(null);
       }
+    } catch (err) {
+      console.error("could not get product list", err);
     }
+  }
 
   async function handleDeleteCustomer() {
     await deleteCustomer(customerId);
@@ -88,6 +103,20 @@ function App() {
       console.error(err);
     }
   };
+
+  async function handleSubmitRenamedCustomer(newName) {
+    try {
+      if (customerId) {
+
+        await putCustomer(newName, customerId);
+        await refreshCustomerList();
+      }
+
+    } catch (err) {
+      alert("Failed to rename customer");
+      console.error(err);
+    }
+  }
 
   async function handleSubmitNewProduct(newProduct) {
     postNewProduct(newProduct);
@@ -175,18 +204,28 @@ function App() {
 
         <div id="button-panel">
           <button id="add-customer" onClick={handleAddCustomer}>Add Customer</button>
+          <button id="rename-customer" onClick={handleRenameCustomer}>Rename Customer</button>
           <button id="delete-customer" onClick={handleDeleteCustomer}>Delete Customer</button>
           <button id="add-product" onClick={handleAddProduct}>Add Product</button>
+          <button id="modify-product" onClick={handleModifyProduct}>Modify Product</button>
           <button id="delete-product" onClick={handleDeleteProduct}>Delete Product</button>
         </div>
 
-        <AddCustomerModal
+        <CustomerModal
           isOpen={isAddCustomerOpen}
           onClose={() => setIsAddCustomerOpen(false)}
+          customerPrefix="Add New"
           onSubmit={handleSubmitNewCustomer}
         />
 
-        <AddProductModal
+        <CustomerModal
+          isOpen={isRenameCustomerOpen}
+          onClose={() => setIsRenameCustomerOpen(false)}
+          customerPrefix="Rename"
+          onSubmit={handleSubmitRenamedCustomer}
+        />
+
+        <ProductModal
           isOpen={isAddProductOpen}
           onClose={() => {
             setIsAddProductOpen(false)

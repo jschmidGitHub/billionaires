@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const AddCustomerModal = ({ isOpen, onClose, onSubmit }) => {
+const AddCustomerModal = ({ isOpen, onClose, customerPrefix, onSubmit }) => {
   const [name, setName] = useState("");
 
   if (!isOpen) return null;
@@ -32,7 +32,7 @@ const AddCustomerModal = ({ isOpen, onClose, onSubmit }) => {
         maxWidth: '400px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
       }}>
-        <h2 style={{ marginTop: 0 }}>Add New Customer</h2>
+        <h2 style={{ marginTop: 0 }}>{customerPrefix} Customer</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -56,7 +56,7 @@ const AddCustomerModal = ({ isOpen, onClose, onSubmit }) => {
             </button>
             <button type="submit"
               style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ccc' }}>
-              Add Customer
+              {customerPrefix} Customer
             </button>
           </div>
         </form>

@@ -17,37 +17,37 @@ app.use(cors());                                   // allow SPA
 app.use(express.json());                           // parse JSON bodies
 
 app.get('/api/customers', async (req, res) => {
-    
-    //console.log("Got a GET: /api/customers");
 
-    try {
-      const customers = db.prepare('SELECT ID, Name FROM Customers').all();
+  //console.log("Got a GET: /api/customers");
 
-      res.json(customers);  // Forward query results to the front-end
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+  try {
+    const customers = db.prepare('SELECT ID, Name FROM Customers').all();
+
+    res.json(customers);  // Forward query results to the front-end
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.get('/api/products', async (req, res) => {
-    
-    //console.log("Got a GET: /api/products");
-    const customerId = req.query.customerId;
 
-    if (!customerId) {
-        console.error("customerId missing in query params.");
-        return res.status(400).json({ error: 'customerId is required' });
-    }
+  //console.log("Got a GET: /api/products");
+  const customerId = req.query.customerId;
 
-    try {
-      const productDetail = db.prepare(`SELECT ID, CustomerID, Name, ImageLink, Description, Price FROM Products WHERE CustomerID = ${customerId}`).all();
-      
-      //console.log("Product Detail: ", productDetail);
+  if (!customerId) {
+    console.error("customerId missing in query params.");
+    return res.status(400).json({ error: 'customerId is required' });
+  }
 
-      res.json(productDetail);  // Forward query results to the front-end
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+  try {
+    const productDetail = db.prepare(`SELECT ID, CustomerID, Name, ImageLink, Description, Price FROM Products WHERE CustomerID = ${customerId}`).all();
+
+    //console.log("Product Detail: ", productDetail);
+
+    res.json(productDetail);  // Forward query results to the front-end
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/customers', async (req, res) => {
@@ -55,18 +55,18 @@ app.post('/api/customers', async (req, res) => {
   //console.log("Got a POST: /api/customers");
   const { customerName } = req.body;
 
-    if (!customerName) {
-        console.error("customerName missing in req body.");
-    }
+  if (!customerName) {
+    console.error("customerName missing in req body.");
+  }
 
-    // Basic validation
-    if (!customerName) {
-        return res
-            .status(400)
-            .json({ error: 'Missing required field: customerName' });
-    }
+  // Basic validation
+  if (!customerName) {
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: customerName' });
+  }
 
-    const name = customerName.trim();
+  const name = customerName.trim();
 
   try {
     const row = db.prepare('SELECT MAX(ID) AS maxId FROM Customers').get();
@@ -76,7 +76,7 @@ app.post('/api/customers', async (req, res) => {
     // Insert new customer
     db.prepare('INSERT INTO Customers (ID, Name) VALUES (?, ?)').run(newId, name);
 
-    console.log(`Added customer: ID=${newId}, Name="${name}"`);
+    //console.log(`Added customer: ID=${newId}, Name="${name}"`);
 
     res.status(201).json({
       success: true,
@@ -93,7 +93,7 @@ app.post('/api/customers', async (req, res) => {
 });
 
 app.delete('/api/customers/:id', async (req, res) => {
-  
+
   //console.log("Got a DELETE: /api/customers/:id");
 
   const customerId = req.params.id;
@@ -118,7 +118,7 @@ app.delete('/api/customers/:id', async (req, res) => {
       return res.status(404).json({ error: 'Customer not found' });
     }
 
-    console.log(`Deleted customer: ID=${id}, Name="${customer.Name}"`);
+    //console.log(`Deleted customer: ID=${id}, Name="${customer.Name}"`);
 
     res.status(200).json({
       success: true,
@@ -138,38 +138,35 @@ app.post('/api/products', async (req, res) => {
 
   const { customerId, productName, description, price, imageLink } = req.body;
 
-    // Basic validation
-    if (!customerId) {
-        console.error('Missing required field: customerId');
-        return res
-            .status(400)
-            .json({ error: 'Missing required field: customerId' });
-    }
-    if (!productName) {
-        console.error('Missing required field: productName');
-        return res
-            .status(400)
-            .json({ error: 'Missing required field: productName' });
-    }
-    if (!description) {
-        console.error('Missing required field: description');
-        return res
-            .status(400)
-            .json({ error: 'Missing required field: description' });
-    }
-
+  // Basic validation
+  if (!customerId) {
+    console.error('Missing required field: customerId');
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: customerId' });
+  }
+  if (!productName) {
+    console.error('Missing required field: productName');
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: productName' });
+  }
+  if (!description) {
+    console.error('Missing required field: description');
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: description' });
+  }
 
   try {
     const row = db.prepare('SELECT MAX(ID) AS maxId FROM Products').get();
     const maxId = row?.maxId ?? 0;
     const newId = maxId + 1;
 
-    console.log("newID:", newId);
-
     // Insert new product
     db.prepare('INSERT INTO Products (ID, CustomerID, Name, Description, Price, ImageLink) VALUES (?, ?, ?, ?, ?, ?)').run(newId, customerId, productName, description, price, imageLink);
 
-    console.log(`Added product with ID=${newId}, Name="${productName}"`);
+    //console.log(`Added product with ID=${newId}, Name="${productName}"`);
 
     res.status(201).json({
       success: true,
@@ -182,8 +179,8 @@ app.post('/api/products', async (req, res) => {
 });
 
 app.delete('/api/products/:id', async (req, res) => {
-  
-  console.log("Got a DELETE: /api/products/:id");
+
+  //console.log("Got a DELETE: /api/products/:id");
 
   const productId = req.params.id;
 
@@ -200,7 +197,7 @@ app.delete('/api/products/:id', async (req, res) => {
       console.error('Product not found at id:', id);
       return res.status(404).json({ error: 'Product not found' });
     }
-  
+
     // Delete the customer
     const result = db.prepare('DELETE FROM Products WHERE ID = ?').run(id);
 
@@ -208,7 +205,7 @@ app.delete('/api/products/:id', async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    console.log(`Deleted customer: ID=${id}, Name="${customer.Name}"`);
+    //console.log(`Deleted customer: ID=${id}, Name="${customer.Name}"`);
 
     res.status(200).json({
       success: true,
@@ -222,16 +219,52 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
+app.put('/api/customers/:id', async (req, res) => {
+
+  console.log("Got a PUT: /api/customers:/id");
+
+  const customerId = req.params.id;
+  const { customerName } = req.body;
+
+  if (!customerName) {
+    console.error("customerName missing in req body.");
+  }
+
+  // Basic validation
+  if (!customerName) {
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: customerName' });
+  }
+
+  const name = customerName.trim();
+
+  try {
+
+    db.prepare('UPDATE Customers SET Name = ? WHERE ID = ?').run(name, customerId);
+
+    //console.log(`Updated customer: ID=${customerId}, Name="${name}"`);
+
+    res.status(201).json({
+      success: true,
+      customer: { ID: customerId, Name: name }
+    });
+  } catch (err) {
+    console.error('Database error while executing UPDATE customer:', err);
+    res.status(500).json({ error: 'Failed to UPDATE customer' });
+  }
+});
+
 // ---------------------------------------------------------------------
 // 404 for everything else
 // ---------------------------------------------------------------------
 app.use((_req, res) => {
-    res.status(404).json({ error: 'Not found' });
+  res.status(404).json({ error: 'Not found' });
 });
 
 // ---------------------------------------------------------------------
 // Start server
 // ---------------------------------------------------------------------
 app.listen(PORT, () => {
-    console.log(`Backend listening at localhost:${PORT} for queries`);
+  console.log(`Backend listening at localhost:${PORT} for queries`);
 });
