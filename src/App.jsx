@@ -40,6 +40,8 @@ function App() {
     }
       else {
       await deleteProduct(selectedProduct.ID);
+      setSelectedProduct(null);
+      await fetchProductDetail();
     }
   }
 

@@ -1,10 +1,10 @@
 async function getCustomerList() {
 
-    const response = await fetch('/api/customer-dropdown/', {
+    const response = await fetch('/api/customers/', {
         method: 'GET',
     });
     if (!response.ok) {
-        console.error('Network error doing GET to /api/customer-dropdown.');
+        console.error('Network error doing GET to /api/customers');
     }
 
     const customerData = await response.json();  // Get query results from back end...

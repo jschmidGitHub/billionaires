@@ -16,18 +16,12 @@ const PORT = 3001;
 app.use(cors());                                   // allow SPA
 app.use(express.json());                           // parse JSON bodies
 
-// ---------------------------------------------------------------------
-// POST /api/customer-dropdown
-// Body: {}
-// ---------------------------------------------------------------------
-app.get('/api/customer-dropdown', async (req, res) => {
+app.get('/api/customers', async (req, res) => {
     
-    //console.log("Got a GET: /api/customer-dropdown");
+    //console.log("Got a GET: /api/customers");
 
     try {
       const customers = db.prepare('SELECT ID, Name FROM Customers').all();
-      
-      //console.log("Customers: ", customers);
 
       res.json(customers);  // Forward query results to the front-end
     } catch (err) {
@@ -35,13 +29,9 @@ app.get('/api/customer-dropdown', async (req, res) => {
     }
 });
 
-// ---------------------------------------------------------------------
-// POST /api/product-detail
-// Body: {}
-// ---------------------------------------------------------------------
-app.get('/api/product-detail', async (req, res) => {
+app.get('/api/products', async (req, res) => {
     
-    //console.log("Got a GET: /api/product-detail");
+    //console.log("Got a GET: /api/products");
     const customerId = req.query.customerId;
 
     if (!customerId) {
@@ -60,9 +50,9 @@ app.get('/api/product-detail', async (req, res) => {
     }
 });
 
-app.post('/api/new-customer', async (req, res) => {
+app.post('/api/customers', async (req, res) => {
 
-  //console.log("Got a POST: /api/new-customer");
+  //console.log("Got a POST: /api/customers");
   const { customerName } = req.body;
 
     if (!customerName) {
@@ -102,10 +92,11 @@ app.post('/api/new-customer', async (req, res) => {
   }
 });
 
-app.delete('/api/delete-customer', async (req, res) => {
+app.delete('/api/customers/:id', async (req, res) => {
   
-  console.log("Got a DELETE: /api/delete-customer");
-  const customerId = req.query.customerId;
+  //console.log("Got a DELETE: /api/customers/:id");
+
+  const customerId = req.params.id;
 
   if (!customerId || isNaN(customerId)) {
     return res.status(400).json({ error: 'Valid customer ID is required' });
@@ -137,21 +128,13 @@ app.delete('/api/delete-customer', async (req, res) => {
 
   } catch (err) {
     console.error('Delete error:', err);
-
-    // If foreign key constraint fails (e.g., customer has products)
-    if (err.message.includes('FOREIGN KEY constraint failed')) {
-      return res.status(409).json({
-        error: 'Cannot delete customer: they have associated products. Delete products first.'
-      });
-    }
-
     res.status(500).json({ error: 'Failed to delete customer' });
   }
 });
 
-app.post('/api/new-product', async (req, res) => {
+app.post('/api/products', async (req, res) => {
 
-  console.log("Got a POST: /api/new-product");
+  //console.log("Got a POST: /api/products");
 
   const { customerId, productName, description, price, imageLink } = req.body;
 
@@ -198,12 +181,11 @@ app.post('/api/new-product', async (req, res) => {
   }
 });
 
-app.delete('/api/delete-product', async (req, res) => {
+app.delete('/api/products/:id', async (req, res) => {
   
-  console.log("Got a DELETE: /api/delete-product");
-  const productId = req.params.productId;
+  console.log("Got a DELETE: /api/products/:id");
 
-  console.log("Received productId: ", productId, isNaN(productId));
+  const productId = req.params.id;
 
   if (!productId || isNaN(productId)) {
     return res.status(400).json({ error: 'Valid product ID is required' });
@@ -215,30 +197,28 @@ app.delete('/api/delete-product', async (req, res) => {
     // Check if customer exists first
     const customer = db.prepare('SELECT ID FROM Products WHERE ID = ?').get(id);
     if (!customer) {
-      console.error('Customer not found at id:', id);
-      return res.status(404).json({ error: 'Customer not found' });
-    } else {
-      console.log('Customer found at id:', id);
+      console.error('Product not found at id:', id);
+      return res.status(404).json({ error: 'Product not found' });
     }
-  /*
+  
     // Delete the customer
-    const result = db.prepare('DELETE FROM Customers WHERE ID = ?').run(id);
+    const result = db.prepare('DELETE FROM Products WHERE ID = ?').run(id);
 
     if (result.changes === 0) {
-      return res.status(404).json({ error: 'Customer not found' });
+      return res.status(404).json({ error: 'Product not found' });
     }
 
     console.log(`Deleted customer: ID=${id}, Name="${customer.Name}"`);
-*/
+
     res.status(200).json({
       success: true,
-      message: 'Customer deleted',
+      message: 'Product deleted',
       deletedId: id
     });
 
   } catch (err) {
     console.error('Delete error:', err);
-    res.status(500).json({ error: 'Failed to delete customer' });
+    res.status(500).json({ error: 'Failed to delete Product' });
   }
 });
 

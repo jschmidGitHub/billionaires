@@ -1,7 +1,7 @@
 async function postNewCustomer(customerName) {
   //console.log("Post: ", customerName);
 
-  const response = await fetch('/api/new-customer/', {
+  const response = await fetch('/api/customers/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -9,7 +9,7 @@ async function postNewCustomer(customerName) {
         })
     });
     if (!response.ok) {
-        throw new Error('Network error doing POST to /api/new-customer/.');
+        throw new Error('Network error doing POST to /api/customers/');
     }
 }
 

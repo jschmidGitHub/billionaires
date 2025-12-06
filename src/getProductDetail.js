@@ -4,10 +4,10 @@ async function getProductDetail(customerId) {
     if (customerId) {
         
         const response = await fetch(
-            `/api/product-detail/?customerId=${encodeURIComponent(customerId)}`
+            `/api/products/?customerId=${encodeURIComponent(customerId)}`
         );
         if (!response.ok) {
-            console.error('Network error doing GET to /api/customer-dropdown.');
+            console.error('Network error doing GET to /api/customers');
         }
 
         customerData = await response.json();  // Get query results from back end...

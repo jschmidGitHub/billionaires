@@ -1,6 +1,6 @@
 async function postNewProduct(newProduct) {
 
-    const response = await fetch('/api/new-product/', {
+    const response = await fetch('/api/products/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -13,7 +13,7 @@ async function postNewProduct(newProduct) {
     });
 
     if (!response.ok) {
-        throw new Error('Network error doing POST to /api/new-product/.');
+        throw new Error('Network error doing POST to /api/products/');
     }
 }
 
