@@ -41,16 +41,16 @@ html, body, #root {
 #product-table td {
   text-align: center;
   width: 100%;
-  padding: 8px 12px;                    /* ← reduced from 12px 12px */
+  padding: 8px 12px;                    
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  vertical-align: middle;               /* ← centers text vertically */
+  vertical-align: middle;              
   line-height: 1.4;
 }
 
 #product-info {
-  width: 300px;
+  width: 275px;
   height: 400px;
 }
 
@@ -75,10 +75,10 @@ html, body, #root {
 
 #button-panel {
   display: flex;
-  flex-direction: row;        /* you already have this */
-  gap: 20px;                  /* nice spacing between buttons */
-  justify-content: center;    /* or flex-start, space-between, etc. */
-  flex-wrap: wrap;            /* optional: wrap on small screens */
+  flex-direction: row;        
+  gap: 20px;                  
+  justify-content: center;    
+  flex-wrap: wrap;            
   padding: 20px;
   margin: 20px 0;
   width: 200px;
@@ -91,7 +91,7 @@ html, body, #root {
   font-size: 1rem;
   text-align: center;
   border: none;
-  background-color: #b8b8b8;
+  background-color: #c5c5c5;
   color: rgb(0, 0, 0);
   cursor: pointer;
   border-radius: 10px;
@@ -100,4 +100,8 @@ html, body, #root {
 
 #product-image {
   width: 150px;
+}
+
+#add-product, #modify-product, #delete-product {
+  background-color: #979797 !important;
 }

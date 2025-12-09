@@ -8,6 +8,7 @@ import deleteCustomer from './deleteCustomer.js';
 import putCustomer from './putCustomer.js';
 import postNewProduct from './postNewProduct.js';
 import deleteProduct from './deleteProduct.jsx';
+import putProduct from './putProduct.js';
 import noPic from './assets/noPic.png';
 import './App.css';
 
@@ -119,11 +120,39 @@ function App() {
   }
 
   async function handleSubmitNewProduct(newProduct) {
-    postNewProduct(newProduct);
+    try {
+      const serverProductId = await postNewProduct(newProduct);
+      await fetchProductDetail();
+
+      // Force re-draw of the Product Details
+      const freshProducts = await getProductDetail(customerId);
+      const freshNewProduct = freshProducts.find(p => p.ID === serverProductId);
+      if (freshNewProduct) {
+        setSelectedProduct(freshNewProduct);
+      }
+
+    } catch (err) {
+      alert("Failed to add product");
+      console.error(err);
+    }
   }
 
   async function handleSubmitModifiedProduct(modifiedProduct) {
-    console.log("submit modified product")
+    try {
+      await putProduct(modifiedProduct);
+      await fetchProductDetail();
+
+      // Force re-draw of the Product Details
+      const freshProducts = await getProductDetail(customerId);
+      const updatedProduct = freshProducts.find(p => p.ID === modifiedProduct.productId);
+      if (updatedProduct) {
+        setSelectedProduct(updatedProduct);
+      }
+
+    } catch (err) {
+      alert("Failed to update product");
+      console.error("PUT product failed:", err);
+    }
   }
 
   // Populate the customersDrop select element at startup
@@ -233,9 +262,10 @@ function App() {
           isOpen={isAddProductOpen}
           onClose={() => {
             setIsAddProductOpen(false);
-            fetchProductDetail();
           }}
+          productPrefix="Add New"
           customerId={customerId}
+          productId={undefined}  // returned from server side in postNewProduct.js
           onSubmit={handleSubmitNewProduct}
         />
 
@@ -243,9 +273,10 @@ function App() {
           isOpen={isModifyProductOpen}
           onClose={() => {
             setIsModifyProductOpen(false);
-            fetchProductDetail();
           }}
+          productPrefix="Modify"
           customerId={customerId}
+          productId={selectedProduct?.ID}
           onSubmit={handleSubmitModifiedProduct}
         />
 

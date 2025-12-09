@@ -170,11 +170,11 @@ app.post('/api/products', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      customer: { ID: newId, Name: productName }
+      ID: newId
     });
   } catch (err) {
     console.error('Database error while adding product:', err);
-    res.status(500).json({ error: 'Failed to add customer' });
+    res.status(500).json({ error: 'Failed to add product' });
   }
 });
 
@@ -226,12 +226,9 @@ app.put('/api/customers/:id', async (req, res) => {
   const customerId = req.params.id;
   const { customerName } = req.body;
 
-  if (!customerName) {
-    console.error("customerName missing in req body.");
-  }
-
   // Basic validation
   if (!customerName) {
+    console.error("customerName missing in req body.");
     return res
       .status(400)
       .json({ error: 'Missing required field: customerName' });
@@ -244,6 +241,60 @@ app.put('/api/customers/:id', async (req, res) => {
     db.prepare('UPDATE Customers SET Name = ? WHERE ID = ?').run(name, customerId);
 
     //console.log(`Updated customer: ID=${customerId}, Name="${name}"`);
+
+    res.status(201).json({
+      success: true,
+      customer: { ID: customerId, Name: name }
+    });
+  } catch (err) {
+    console.error('Database error while executing UPDATE customer:', err);
+    res.status(500).json({ error: 'Failed to UPDATE customer' });
+  }
+});
+
+app.put('/api/products/:id', async (req, res) => {
+  
+  //console.log("Got a PUT: /api/products:/id");
+  console.log(req.body);
+                                              // imageLink can be null
+  const { customerId, productId, description, imageLink, productName, price } = req.body;
+
+  // Basic validation
+  if (!customerId) {
+    console.error("customerId missing in req body.");
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: customerId' });
+  }
+  if (!productId) {
+    console.error("productId missing in req body.");
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: productId' });
+  }
+  if (!description) {
+    console.error("description missing in req body.");
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: description' });
+  }
+  if (!productName) {
+    console.error("productName missing in req body.");
+    return res
+      .status(400)
+      .json({ error: 'Missing required field: productName' });
+  }
+  let priceNumber = price;
+  if (!price) {
+    priceNumber = 0;
+  }
+  const name = productName.trim();
+
+  try {
+    db.prepare('UPDATE Products SET ID = ?, CustomerID = ?, Name = ?, Description = ?, Price = ?, ImageLink = ? WHERE ID = ?').
+    run(productId, customerId, name, description, priceNumber, imageLink, productId);
+
+    console.log(`Updated customer: ID=${customerId}, Name="${name}"`);
 
     res.status(201).json({
       success: true,

@@ -15,6 +15,10 @@ async function postNewProduct(newProduct) {
     if (!response.ok) {
         throw new Error('Network error doing POST to /api/products/');
     }
+
+    const data = await response.json();
+    const { ID } = data;
+    return ID;
 }
 
 export default postNewProduct

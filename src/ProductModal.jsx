@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const AddProductModal = ({ isOpen, onClose, customerId, onSubmit }) => {
+const AddProductModal = ({ isOpen, onClose, productPrefix, customerId, productId, onSubmit }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
@@ -21,6 +21,7 @@ const AddProductModal = ({ isOpen, onClose, customerId, onSubmit }) => {
             // Create an object containing the fields
             const newProduct = {
                 customerId: customerId,
+                productId: productId,
                 name: name,
                 description: description,
                 price: price,
@@ -54,7 +55,7 @@ const AddProductModal = ({ isOpen, onClose, customerId, onSubmit }) => {
                 maxWidth: '400px',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
             }}>
-                <h2 style={{ marginTop: 0 }}>Add New Product</h2>
+                <h2 style={{ marginTop: 0 }}>{productPrefix} Product</h2>
 
                 <form onSubmit={handleSubmit}>
                     <input
@@ -124,7 +125,7 @@ const AddProductModal = ({ isOpen, onClose, customerId, onSubmit }) => {
                         </button>
                         <button type="submit"
                             style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ccc' }}>
-                            Add Product
+                            {productPrefix} Product
                         </button>
                     </div>
                 </form>
