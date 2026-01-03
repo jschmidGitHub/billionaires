@@ -13,6 +13,8 @@ import noPic from './assets/noPic.png';
 import './App.css';
 
 function App() {
+  const maxReadOnlyCustomerId = 8;
+  const maxReadOnlyProductId = 27;
   const [customerId, setCustomerId] = useState("");
   const [optionList, setOptionList] = useState([]);
   const [productList, setProductList] = useState([]);
@@ -29,6 +31,8 @@ function App() {
   function handleRenameCustomer() {
     if (!customerId) {
       alert("You must select a customer from the drop-down before using the Rename Customer button.");
+    } else if (selectedCustomer.ID <= maxReadOnlyCustomerId) {
+      alert("This customer is read-only.  Please create a new customer to test rename functionality.");
     } else {
       setIsRenameCustomerOpen(true);
     }
@@ -49,6 +53,8 @@ function App() {
       alert("You must select a customer from the drop-down before deleting a product.");
     } else if (!selectedProduct) {
       alert("You must click on a product from the product-buttons before deleting a product.");
+    } else if (selectedProduct.ID <= maxReadOnlyProductId) {
+      alert("This product is read-only.  Please create a new product to test delete functionality.");
     }
     else {
       await deleteProduct(selectedProduct.ID);
@@ -58,6 +64,10 @@ function App() {
   }
 
   function handleModifyProduct() {
+    if (selectedProduct.ID <= maxReadOnlyProductId) {
+      alert("This product is read-only.  Please create a new product to test modify functionality.");
+      return;
+    }
     setIsModifyProductOpen(true);
   }
 
@@ -88,6 +98,12 @@ function App() {
   }
 
   async function handleDeleteCustomer() {
+
+    if(customerId <= maxReadOnlyCustomerId) {
+      alert("This customer is read-only.  Please create a new customer to test delete functionality.");
+      return;
+    }
+
     await deleteCustomer(customerId);
     await refreshCustomerList();
     setCustomerId("");
@@ -108,6 +124,11 @@ function App() {
   async function handleSubmitRenamedCustomer(newName) {
     try {
       if (customerId) {
+
+        if (customerId <= maxReadOnlyCustomerId) {
+          alert("This customer is read-only.  Please create a new customer to test rename functionality.");
+          return;
+        }
 
         await putCustomer(newName, customerId);
         await refreshCustomerList();
